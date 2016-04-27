@@ -1,0 +1,104 @@
+#include <iostream> //Preprocessor directives
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+int array2D[3][3]; //Defining array
+int i = 0, n = 0; //Defining global variables
+
+void assignNumbers(); //Defining functions
+void checkUnique();
+int magicSquare();
+
+void checkUnique() //Function to generate random numbers and check if they are unique
+{
+    int i, n, a, b; //Defining local variables
+
+    for (i = 0; i<3; i++)
+    {
+        for (n=0; n <3; n++) //Nested for loop to reset array to 0
+        {
+            array2D[i][n]= 0; //Reset array
+        }
+    }
+
+    for (i=0; i<3; i++)
+    {
+        for (n=0; n<3; n++) //Nested for loop to assign random numbers to array
+        {
+            redo: //Label for the goto statement
+
+            array2D[i][n] = rand()%9+1; //Random number generator
+
+            for (a=0; a<3; a++)
+            {
+                for (b=0; b<3; b++) //Another nested for loop to check if the number generated is unique
+                {
+                    if (a == i && b == n) //Skips the number that it is
+                    {
+                        continue; //Continues to next iteration of for loop
+                    }
+                    if (array2D[a][b] == array2D[i][n])
+                    {
+                        goto redo; //Goto statement
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+void assignNumbers() //Function to call other functions
+{
+    srand(time(NULL)); //Makes the number genuinely random
+
+    do
+    {
+        checkUnique(); //Calls the function
+    }
+    while (magicSquare() == 0); //Do while loop that calls the magicSquare function, and loops as long as the result of the magic Square function is 0
+}
+
+int magicSquare() //Function to determine if it's a magic square or not
+{
+    int row1, row2, row3, col1, col2, col3, diag1, diag2; //Defining local variables for sums
+    int magicNumber;
+
+    for (i=0; i<3; i++)
+    {
+        cout << array2D[i][0] << " " << array2D[i][1] << " " << array2D[i][2] << endl; //Displays the square
+    }
+
+    row1 = array2D[0][0] + array2D[0][1] + array2D[0][2]; //Finding the sum of each row, column, and diagonal and setting it to variables
+    row2 = array2D[1][0] + array2D[1][1] + array2D[1][2];
+    row3 = array2D[2][0] + array2D[2][1] + array2D[2][2];
+
+    col1 = array2D[0][0] + array2D[1][0] + array2D[2][0];
+    col2 = array2D[0][1] + array2D[1][1] + array2D[2][1];
+    col3 = array2D[0][2] + array2D[1][2] + array2D[2][2];
+
+    diag1 = array2D[0][0] + array2D[1][1] + array2D[2][2];
+    diag2 = array2D[0][2] + array2D[1][1] + array2D[2][0];
+
+    magicNumber = row1; //Sets magicNumber to row1 to evaluate the other rows, columns, and diagonals
+
+    if (row2 == magicNumber && row3==magicNumber && col1==magicNumber && col2==magicNumber && col3==magicNumber && diag1==magicNumber && diag2 == magicNumber) //If they all have the same sum
+    {
+        cout << "Magic square!" << endl << endl;
+        return 1; //Then it displays the message and returns 1, ending the program
+    }
+    else //If one of the sums is not the same
+    {
+        cout << "Not a magic square!" << endl << endl;
+        return 0; //Then it displays the message and returns 0, causing it to loop in the assignNumbers function
+    }
+    return 0;
+}
+int main()
+{
+    assignNumbers(); //Calls the first function
+
+    return 0;
+}
